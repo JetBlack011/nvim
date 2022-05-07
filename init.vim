@@ -4,7 +4,7 @@ Plug 'Mofiqul/dracula.nvim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
 Plug 'lervag/vimtex'
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+" Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'KeitaNakamura/tex-conceal.vim'
 Plug 'sirver/ultisnips'
 Plug 'neoclide/coc-snippets'
@@ -37,6 +37,7 @@ set spelllang=en_us
 " set spell                 " enable spell check (may need to download language package)
 " set noswapfile            " disable creating swap file
 " set backupdir=~/.cache/vim " Directory to store backup files.
+" nnoremap <C-w>h <C-w>s
 
 """ Terminal colors
 let $NVIM_TUI_ENABLE_TRUE_COLOR=1
@@ -50,7 +51,7 @@ nnoremap <leader>ff <cmd>Telescope find_files<cr>
 nnoremap <leader>fg <cmd>Telescope live_grep<cr>
 nnoremap <leader>fb <cmd>Telescope buffers<cr>
 nnoremap <leader>fh <cmd>Telescope help_tags<cr>
-nnoremap <leader>ft <cmd>Telescope git_files<cr>
+nnoremap <leader>ftf <cmd>Telescope git_files<cr>
 nnoremap <leader>ftg <cmd>lua require('telescope.builtin').live_grep{ cwd = vim.fn.systemlist("git rev-parse --show-toplevel")[1] }<cr>
 
 """ LaTeX config
@@ -63,6 +64,8 @@ let g:vimtex_quickfix_mode=0
 " let g:tex_conceal='abdmg'
 " hi Conceal ctermbg=none
 setlocal spell
+nnoremap <silent> <F11> :set spell!<cr>
+inoremap <silent> <F11> <C-O>:set spell!<cr>
 
 let g:UltiSnipsExpandTrigger='<tab>'
 let g:UltiSnipsJumpForwardTrigger='<tab>'
