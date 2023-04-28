@@ -154,10 +154,10 @@ snippet =< "implied by" Ai
 \impliedby
 endsnippet
 
-context "math()"
-snippet iff "iff" Ai
-\iff $0
-endsnippet
+#context "math()"
+#snippet iff "iff" Ai
+#\iff $0
+#endsnippet
 
 snippet mk "Math" wA
 $${1}$`!p
@@ -384,10 +384,10 @@ snippet inv "Inverse" iA
 ^{-1}$0
 endsnippet
 
-context "math()"
-snippet td "to the ... power" iA
-^{$1}$0
-endsnippet
+# context "math()"
+# snippet td "to the ... power" iA
+# ^{$1}$0
+# endsnippet
 
 context "math()"
 snippet rd "to the ... power" iA
@@ -714,7 +714,7 @@ endsnippet
 priority 10
 context "math()"
 snippet "hat" "hat" riA
-\hat{$1}$0
+\widehat{$1}$0
 endsnippet
 
 priority 100
@@ -732,9 +732,9 @@ snippet HH "H" iA
 \mathbb{H}
 endsnippet
 
-snippet DD "D" iA
-\mathbb{D}
-endsnippet
+#snippet DD "D" iA
+#\mathbb{D}
+#endsnippet
 
 snippet \G "Gamma" i
 \Gamma
@@ -943,7 +943,7 @@ endsnippet
 
 
 snippet def "Definition" bA
-\begin{definition}[$1]
+\begin{definition}
 	$2
 \end{definition}
 $0
@@ -987,7 +987,6 @@ endsnippet
 snippet cprb "Problem and Counter" bA
 \setcounter{problem}{$1}
 \begin{problem}
-	$2
 \end{problem}
 $0
 endsnippet
