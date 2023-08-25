@@ -63,6 +63,8 @@ set spelllang=en_us
 nnoremap <C-w>h <C-w>s
 nnoremap <C-n> :nohl<cr>
 
+let g:loaded_perl_provider = 0
+
 """ Terminal colors
 let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 set termguicolors
