@@ -1,6 +1,6 @@
 call plug#begin()
 " Plug 'joshdick/onedark.vim'
-" Plug 'dracula/vim'
+" Plug 'dracula/vim', { 'as': 'dracula' }
 Plug 'Mofiqul/dracula.nvim'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
@@ -11,7 +11,7 @@ Plug 'KeitaNakamura/tex-conceal.vim'
 Plug 'petRUSHka/vim-sage'
 Plug 'neovim/nvim-lspconfig'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-Plug 'simrat39/symbols-outline.nvim'
+"Plug 'simrat39/symbols-outline.nvim'
 Plug 'williamboman/mason.nvim'
 Plug 'williamboman/mason-lspconfig.nvim'
 
@@ -26,14 +26,20 @@ Plug 'hrsh7th/cmp-nvim-lua'
 "  Snippets
 " Plug 'L3MON4D3/LuaSnip'
 " Plug 'rafamadriz/friendly-snippets'
-Plug 'quangnguyen30192/cmp-nvim-ultisnips'
+"Plug 'quangnguyen30192/cmp-nvim-ultisnips'
 Plug 'sirver/ultisnips'
 
-Plug 'VonHeikemen/lsp-zero.nvim', {'branch': 'v1.x'}
+Plug 'github/copilot.vim'
 call plug#end()
 
 """ Basic thing-a-ma-bobs
-set termguicolors
+"set termguicolors
+" Enable true color
+if exists('+termguicolors')
+  let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+  let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+  set termguicolors
+endif
 set nocompatible            " disable compatibility to old-time vi
 set showmatch               " show matching
 set ignorecase              " case insensitive
@@ -46,10 +52,10 @@ set shiftwidth=4            " width for autoindents
 set autoindent              " indent a new line the same amount as the line just typed
 set breakindent
 set number norelativenumber
-autocmd InsertEnter * set relativenumber
-autocmd InsertLeave * set norelativenumber
+autocmd InsertEnter * set norelativenumber 
+autocmd InsertLeave * set relativenumber
 set wildmode=longest,list   " get bash-like tab completions
-" set cc=80                   " set an 80 column border for good coding style
+" set cc=100                   " set an 80 column border for good coding style
 filetype plugin indent on   " allow auto-indenting depending on file type
 syntax on                   " syntax highlighting
 set clipboard=unnamedplus   " using system clipboard
@@ -61,8 +67,14 @@ set spelllang=en_us
 " set spell                 " enable spell check (may need to download language package)
 " set noswapfile            " disable creating swap file
 " set backupdir=~/.cache/vim " Directory to store backup files.
+set mouse=a
 nnoremap <C-w>h <C-w>s
 nnoremap <C-n> :nohl<cr>
+
+" Braces
+inoremap {<cr> {<cr>}<c-o>O
+inoremap [<cr> [<cr>]<c-o>O
+inoremap (<cr> (<cr>)<c-o>O
 
 let g:loaded_perl_provider = 0
 
@@ -98,8 +110,9 @@ setlocal spell
 nnoremap <silent> <F11> :set spell!<cr>
 inoremap <silent> <F11> <C-O>:set spell!<cr>
 
-nnoremap <leader>cc <cmd>e ~/.vimrc<cr>
-nnoremap <leader>ct <cmd>e ~/texmf/tex/latex/commonstuff/<cr>
+nnoremap <leader>erc <cmd>e ~/.vimrc<cr>
+nnoremap <leader>el <cmd>e ~/texmf/tex/latex/commonstuff/<cr>
+nnoremap <leader>rc <cmd>source ~/.vimrc<cr>
 
 let g:UltiSnipsExpandTrigger='<tab>'
 let g:UltiSnipsJumpForwardTrigger='<tab>'
@@ -109,9 +122,12 @@ let g:UltiSnipsEditSplit='horizontal'
 ":command RefreshSnippets call UltiSnips#RefreshSnippets()<bar>CocRestart
 
 " VimTeX figures
-" inoremap <C-f> <Esc>: silent exec '.!inkscape-figures create "'.getline('.').'" "'.b:vimtex.root.'/figures/"'<CR><CR>:w<CR>
-" nnoremap <C-f> : silent exec '!inkscape-figures edit "'.b:vimtex.root.'/figures/" > /dev/null 2>&1 &'<CR><CR>:redraw!<CR>
+inoremap <C-f> <Esc>: silent exec '.!inkscape-figures create "'.getline('.').'" "'.b:vimtex.root.'/figures/"'<CR><CR>:w<CR>
+nnoremap <C-f> : silent exec '!inkscape-figures edit "'.b:vimtex.root.'/figures/" > /dev/null 2>&1 &'<CR><CR>:redraw!<CR>
 
-source ~/.config/nvim/lsp.vim
+" Copilot
+imap <silent><script><expr> <C-J> copilot#Accept("\<CR>")
+let g:copilot_no_tab_map = v:true
 
-nnoremap <leader>fo <cmd>LspZeroFormat<cr>
+" LSP stuff
+lua require('lsp')
