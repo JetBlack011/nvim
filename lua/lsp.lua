@@ -40,52 +40,39 @@ require('mason-lspconfig').setup({
   },
 })
 
-local cmp = require('cmp')
-
--- require("cmp_nvim_ultisnips").setup{}
--- local cmp_ultisnips_mappings = require("cmp_nvim_ultisnips.mappings")
+local cmp = require("cmp")
+local luasnip = require("luasnip")
 
 cmp.setup({
-  sources = {
-    {name = 'nvim_lsp'},
-  },
-  mapping = cmp.mapping.preset.insert({
-    ["<Tab>"] = cmp.mapping(
-      function(fallback)
-        if cmp.visible() then
-            cmp.select_next_item()
-        else
-          cmp_ultisnips_mappings.expand_or_jump_forwards(fallback)
-        end
-      end,
-      { "i", "s", --[[ "c" (to enable the mapping in command mode) ]] }
-    ),
-    ["<S-Tab>"] = cmp.mapping(
-      function(fallback)
-        if cmp.visible() then
-            cmp.select_prev_item()
-        else
-            cmp_ultisnips_mappings.jump_backwards(fallback)
-        end
-      end,
-      { "i", "s", --[[ "c" (to enable the mapping in command mode) ]] }
-    ),
-    ['<C-Space>'] = cmp.mapping.complete(),
-    ['<CR>'] = cmp.mapping.confirm {
-      behavior = cmp.ConfirmBehavior.Replace,
-      select = true,
-    },
-  }),
-  -- Eventually want to switch to luasnip
-  --snippet = {
-  --  expand = function(args)
-  --    require('luasnip').lsp_expand(args.body)
-  --  end,
-  --},
   snippet = {
     expand = function(args)
-      vim.fn["UltiSnips#Anon"](args.body)
+      luasnip.lsp_expand(args.body)
     end,
+  },
+  mapping = cmp.mapping.preset.insert({
+    ["<Tab>"] = cmp.mapping(function(fallback)
+      if cmp.visible() then
+        cmp.select_next_item()
+      elseif luasnip.expand_or_jumpable() then
+        luasnip.expand_or_jump()
+      else
+        fallback()
+      end
+    end, {"i", "s"}),
+
+    ["<S-Tab>"] = cmp.mapping(function(fallback)
+      if luasnip.jumpable(-1) then
+        luasnip.jump(-1)
+      else
+        fallback()
+      end
+    end, {"i", "s"}),
+  }),
+  sources = {
+    { name = "nvim_lsp" },
+    { name = "luasnip" },
+    { name = "buffer" },
+    { name = "path" },
   },
 })
 
@@ -125,15 +112,3 @@ vim.lsp.config('texlab', {
 		}
 	}
 })
-
-require'nvim-treesitter.configs'.setup {
-    highlight = {
-        enable = true,
-    },
-}
-
-require('telescope').setup{
-    defaults = { file_ignore_patterns = { "node_modules" }}
-}
-
--- require("symbols-outline").setup()
