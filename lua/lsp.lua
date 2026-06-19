@@ -1,5 +1,3 @@
--- note: diagnostics are not exclusive to lsp servers
--- so these can be global keybindings
 vim.keymap.set('n', 'gl', '<cmd>lua vim.diagnostic.open_float()<cr>')
 vim.keymap.set('n', '[d', '<cmd>lua vim.diagnostic.goto_prev()<cr>')
 vim.keymap.set('n', ']d', '<cmd>lua vim.diagnostic.goto_next()<cr>')
@@ -8,9 +6,6 @@ vim.api.nvim_create_autocmd('LspAttach', {
   desc = 'LSP actions',
   callback = function(event)
     local opts = {buffer = event.buf}
-
-    -- these will be buffer-local keybindings
-    -- because they only work if you have an active language server
 
     vim.keymap.set('n', 'K', '<cmd>lua vim.lsp.buf.hover()<cr>', opts)
     vim.keymap.set('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<cr>', opts)
@@ -44,6 +39,12 @@ local cmp = require("cmp")
 local luasnip = require("luasnip")
 
 cmp.setup({
+  sources = {
+    { name = "nvim_lsp" },
+    { name = "luasnip" },
+    { name = "buffer" },
+    { name = "path" },
+  },
   snippet = {
     expand = function(args)
       luasnip.lsp_expand(args.body)
@@ -67,13 +68,10 @@ cmp.setup({
         fallback()
       end
     end, {"i", "s"}),
+
+    ['<C-e>'] = cmp.mapping.abort(),
+    ["<CR>"] = cmp.mapping.confirm({ select = true }),
   }),
-  sources = {
-    { name = "nvim_lsp" },
-    { name = "luasnip" },
-    { name = "buffer" },
-    { name = "path" },
-  },
 })
 
 vim.lsp.config('lua_ls', {
@@ -96,7 +94,6 @@ vim.lsp.config('lua_ls', {
 })
 
 vim.lsp.config('texlab', {
-	-- cmd = {"texlab", "-vvvvv","--log-file", "/tmp/texlab.log"},
 	settings = {
 		texlab = {
 			build = {
